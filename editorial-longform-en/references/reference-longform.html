@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>AI, chứng minh và giá trị của quá trình khoa học</title>
+<style>
+:root {
+  --ink:#141414;
+  --muted:#696969;
+  --paper:#f4f1e9;
+  --paper-2:#ebe6dc;
+  --card:#fffdf8;
+  --accent:#b3261e;
+  --accent-2:#5e1f1a;
+  --line:rgba(20,20,20,.16);
+  --max:1180px;
+  --reading:760px;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  color:var(--ink);
+  background:var(--paper);
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height:1.78;
+  text-rendering:optimizeLegibility;
+}
+::selection { background:#ded2ba; }
+a { color:inherit; }
+.progress { position:fixed; inset:0 0 auto 0; height:4px; z-index:99; background:transparent; }
+.progress > span { display:block; width:0; height:100%; background:var(--accent); }
+.topbar {
+  position:absolute; top:0; left:0; right:0; z-index:3;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:24px clamp(20px,5vw,72px);
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+}
+.topbar .mark { font-weight:800; }
+.topbar .meta { color:#6d6257; }
+.hero {
+  min-height:100vh; display:grid; place-items:center; position:relative; overflow:hidden;
+  padding:120px 24px 80px;
+  border-bottom:1px solid var(--line);
+}
+.hero::before {
+  content:''; position:absolute; width:48vw; height:48vw; min-width:420px; min-height:420px;
+  border:1px solid rgba(179,38,30,.22); border-radius:50%; right:-14vw; top:-14vw;
+}
+.hero::after {
+  content:'ANSWER / EXPLANATION'; position:absolute; right:-40px; bottom:56px; transform:rotate(-90deg);
+  font-family:Arial, Helvetica, sans-serif; font-size:11px; letter-spacing:.36em; color:#8b8175;
+}
+.hero-inner { width:min(var(--max),100%); position:relative; z-index:1; }
+.eyebrow {
+  font-family:Arial, Helvetica, sans-serif; font-weight:700; color:var(--accent);
+  font-size:12px; letter-spacing:.18em; text-transform:uppercase; margin-bottom:30px;
+}
+h1 {
+  font-family:Arial, Helvetica, sans-serif; font-size:clamp(48px,8vw,112px); line-height:.92;
+  letter-spacing:-.055em; margin:0; max-width:1080px; text-transform:uppercase;
+}
+.hero-deck {
+  margin-top:42px; display:grid; grid-template-columns:minmax(0,1.15fr) minmax(280px,.7fr); gap:42px;
+  align-items:end;
+}
+.hero-quote {
+  font-size:clamp(24px,3.2vw,44px); line-height:1.16; max-width:760px; margin:0;
+}
+.hero-note {
+  font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:1.65; color:#514a43;
+  border-left:2px solid var(--accent); padding-left:20px;
+}
+.intro { padding:110px 24px 130px; }
+.reading { width:min(var(--reading),100%); margin:0 auto; }
+.body-copy { font-size:clamp(19px,2vw,22px); margin:0 0 1.2em; }
+.body-copy:first-child::first-letter {
+  float:left; font-family:Arial, Helvetica, sans-serif; font-weight:800; font-size:4.7em;
+  line-height:.78; padding-right:12px; padding-top:10px; color:var(--accent);
+}
+.question-band {
+  width:min(var(--max),calc(100% - 48px)); margin:0 auto 130px; padding:clamp(48px,7vw,92px);
+  background:var(--ink); color:#f8f3ea; position:relative; overflow:hidden;
+}
+.question-band::before { content:'?'; position:absolute; right:20px; top:-85px; font-family:Arial,sans-serif; font-weight:800; font-size:310px; color:rgba(255,255,255,.055); line-height:1; }
+.question-band p { margin:0; max-width:980px; font-family:Arial, Helvetica, sans-serif; font-weight:800; font-size:clamp(34px,5vw,72px); line-height:1.03; letter-spacing:-.035em; }
+.section { padding:110px 24px 125px; border-top:1px solid var(--line); }
+.section-inner { width:min(var(--max),100%); margin:0 auto; }
+.section-head { display:grid; grid-template-columns:160px 1fr; gap:44px; margin-bottom:68px; align-items:start; }
+.section-no {
+  font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:800; letter-spacing:.18em;
+  color:var(--accent); border-top:3px solid var(--accent); padding-top:12px;
+}
+h2 {
+  font-family:Arial, Helvetica, sans-serif; font-size:clamp(38px,5.5vw,76px); line-height:1.02;
+  letter-spacing:-.04em; margin:0; max-width:920px;
+}
+.section .reading { margin-left:auto; margin-right:auto; }
+.pull {
+  width:min(980px,calc(100% - 48px)); margin:100px auto; padding:24px 0 24px clamp(24px,5vw,72px);
+  border-left:7px solid var(--accent);
+}
+.pull p {
+  font-family:Arial, Helvetica, sans-serif; font-weight:800; font-size:clamp(30px,4vw,56px);
+  letter-spacing:-.035em; line-height:1.07; margin:0;
+}
+.cards-3 {
+  width:min(var(--max),calc(100% - 48px)); margin:70px auto 100px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+}
+.card { background:var(--card); border:1px solid var(--line); padding:32px; min-height:260px; }
+.card .kicker { font-family:Arial,sans-serif; font-size:11px; letter-spacing:.17em; text-transform:uppercase; color:var(--accent); font-weight:800; }
+.card h3 { font-family:Arial,sans-serif; font-size:26px; letter-spacing:-.025em; line-height:1.06; margin:44px 0 18px; }
+.card p { margin:0; font-size:17px; line-height:1.55; color:#4d4944; }
+.stack { width:min(980px,calc(100% - 48px)); margin:75px auto 105px; }
+.stack-row {
+  display:grid; grid-template-columns:105px 1fr; gap:30px; padding:32px 0;
+  border-top:1px solid var(--line); align-items:start;
+}
+.stack-row:last-child { border-bottom:1px solid var(--line); }
+.stack-num { font-family:Arial,sans-serif; font-size:42px; font-weight:800; letter-spacing:-.05em; color:var(--accent); }
+.stack-row h3 { font-family:Arial,sans-serif; margin:0 0 7px; font-size:25px; letter-spacing:-.02em; }
+.stack-row p { margin:0; color:#514c46; font-size:18px; }
+.center-claim {
+  width:min(var(--max),calc(100% - 48px)); margin:0 auto; padding:130px 24px;
+  text-align:center;
+}
+.center-claim .small { font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:.18em; color:var(--accent); font-size:12px; font-weight:800; }
+.center-claim .big { font-family:Arial,sans-serif; font-size:clamp(44px,7.4vw,100px); line-height:.93; letter-spacing:-.055em; font-weight:800; margin:22px auto 0; max-width:1080px; }
+.data-stage { background:var(--ink); color:#f6efe6; padding:130px 24px; }
+.data-inner { width:min(var(--max),100%); margin:0 auto; }
+.data-title { font-family:Arial,sans-serif; font-size:clamp(82px,18vw,230px); line-height:.8; letter-spacing:-.075em; font-weight:900; margin:0; color:#f6efe6; }
+.data-sub { font-family:Arial,sans-serif; font-weight:700; font-size:clamp(25px,3.2vw,42px); max-width:760px; line-height:1.15; margin:38px 0 70px; }
+.stats { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid rgba(255,255,255,.25); border-bottom:1px solid rgba(255,255,255,.25); }
+.stat { padding:27px 24px; border-right:1px solid rgba(255,255,255,.2); }
+.stat:last-child { border-right:0; }
+.stat strong { display:block; font-family:Arial,sans-serif; font-size:clamp(30px,4vw,58px); line-height:1; letter-spacing:-.04em; }
+.stat span { display:block; margin-top:12px; font-family:Arial,sans-serif; font-size:13px; line-height:1.4; color:#c9c0b6; }
+.data-stage .reading { margin-top:80px; }
+.data-stage .body-copy { color:#eee7de; }
+.counter-stage { padding:120px 24px; background:var(--paper-2); }
+.counter-inner { width:min(var(--max),100%); margin:0 auto; display:grid; grid-template-columns:.8fr 1.2fr; gap:72px; align-items:start; }
+.counter-title { position:sticky; top:50px; }
+.counter-title .red { color:var(--accent); font-family:Arial,sans-serif; font-weight:900; font-size:clamp(78px,12vw,170px); line-height:.8; letter-spacing:-.07em; }
+.counter-title h2 { font-size:clamp(38px,5vw,66px); margin-top:28px; }
+.counter-copy .body-copy:first-child::first-letter { float:none; font-size:inherit; padding:0; color:inherit; }
+.stats-light { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:52px 0; }
+.stat-light { border-top:4px solid var(--accent); background:rgba(255,255,255,.45); padding:24px; }
+.stat-light strong { font-family:Arial,sans-serif; font-size:clamp(30px,4vw,54px); display:block; letter-spacing:-.04em; }
+.stat-light span { font-family:Arial,sans-serif; font-size:13px; color:#5f5952; }
+.triad { width:min(var(--max),calc(100% - 48px)); margin:80px auto 110px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.triad-item { min-height:330px; padding:34px; border:1px solid var(--line); background:var(--card); display:flex; flex-direction:column; }
+.triad-item .n { font-family:Arial,sans-serif; color:var(--accent); font-weight:900; font-size:13px; }
+.triad-item h3 { font-family:Arial,sans-serif; font-size:32px; line-height:1; letter-spacing:-.03em; margin:auto 0 16px; }
+.triad-item p { font-size:17px; color:#514b45; margin:0; line-height:1.55; }
+.statement { background:var(--accent-2); color:#fff8f0; padding:130px 24px; }
+.statement-inner { width:min(var(--max),100%); margin:0 auto; }
+.statement p { margin:0; font-family:Arial,sans-serif; font-weight:900; font-size:clamp(46px,7vw,100px); line-height:.95; letter-spacing:-.055em; max-width:1100px; }
+.conclusion { padding:120px 24px 40px; }
+.closing { margin-top:110px; padding:110px 24px; background:var(--ink); color:#fffaf2; }
+.closing-inner { width:min(var(--max),100%); margin:0 auto; }
+.closing .label { font-family:Arial,sans-serif; color:#d7c9ba; text-transform:uppercase; font-size:12px; letter-spacing:.18em; font-weight:800; }
+.closing h2 { max-width:1080px; margin-top:28px; font-size:clamp(48px,7vw,100px); }
+.references { width:min(var(--reading),calc(100% - 48px)); margin:80px auto 110px; }
+details { border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:24px 0; }
+summary { cursor:pointer; list-style:none; font-family:Arial,sans-serif; font-weight:800; font-size:18px; }
+summary::-webkit-details-marker { display:none; }
+summary::after { content:'＋'; float:right; color:var(--accent); }
+details[open] summary::after { content:'－'; }
+.references ol { padding-left:22px; margin:26px 0 0; }
+.references li { margin:0 0 14px; font-size:15px; line-height:1.5; color:#514c46; }
+.footer { border-top:1px solid var(--line); padding:32px 24px 60px; font-family:Arial,sans-serif; font-size:12px; color:#6b635b; }
+.footer-inner { width:min(var(--max),100%); margin:0 auto; display:flex; justify-content:space-between; gap:20px; }
+.formula { white-space:nowrap; font-family:'Cambria Math','Times New Roman',serif; font-style:italic; }
+.skip { position:absolute; left:-9999px; top:auto; }
+.skip:focus { left:12px; top:12px; z-index:100; background:white; padding:8px 12px; }
+@media (max-width:840px) {
+  .hero { min-height:auto; padding-top:130px; }
+  .hero-deck, .section-head, .counter-inner { grid-template-columns:1fr; }
+  .section-head { gap:18px; }
+  .section-no { width:120px; }
+  .cards-3, .triad, .stats-light { grid-template-columns:1fr; }
+  .stats { grid-template-columns:1fr 1fr; }
+  .stat:nth-child(2) { border-right:0; }
+  .stat:nth-child(-n+2) { border-bottom:1px solid rgba(255,255,255,.2); }
+  .counter-title { position:static; }
+  .stack-row { grid-template-columns:74px 1fr; }
+}
+@media (max-width:520px) {
+  .topbar .meta { display:none; }
+  .hero::after { display:none; }
+  .section, .intro { padding-left:18px; padding-right:18px; }
+  .question-band, .cards-3, .pull, .stack, .center-claim, .triad { width:calc(100% - 36px); }
+  .stats { grid-template-columns:1fr; }
+  .stat { border-right:0; border-bottom:1px solid rgba(255,255,255,.2); }
+  .stat:last-child { border-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print {
+  .progress, .topbar { display:none; }
+  body { background:#fff; }
+  .hero { min-height:auto; page-break-after:always; }
+  .section, .data-stage, .counter-stage, .statement, .closing { break-inside:avoid-page; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Bỏ qua tới nội dung</a>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<header class="topbar"><div class="mark">LONGFORM / AI &amp; SCIENCE</div><div class="meta">Bản dàn lại từ tài liệu nguồn</div></header>
+
+<section class="hero" aria-labelledby="title">
+  <div class="hero-inner">
+    <div class="eyebrow">AI · TOÁN HỌC · QUÁ TRÌNH KHOA HỌC</div>
+    <h1 id="title">AI, chứng minh và giá trị của quá trình khoa học</h1>
+    <div class="hero-deck">
+      <p class="hero-quote">“A problem can have an answer before it has an explanation”</p>
+      <div class="hero-note">Khi AI rút ngắn con đường tới lời giải, câu hỏi không chỉ là máy tìm được gì — mà còn là tri thức nào được tạo ra, kiểm chứng, hiểu và tái sử dụng trên đường đi.</div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+  <section class="intro">
+    <div class="reading">
+      <p class="body-copy">Trong những năm gần đây, trí tuệ nhân tạo (AI) ngày càng tham gia sâu vào nghiên cứu khoa học, từ tìm kiếm tài liệu, phân tích dữ liệu và xây dựng mô hình đến đề xuất giả thuyết, viết mã và kiểm chứng kết quả. AI cho phép các nhà nghiên cứu khảo sát những không gian tìm kiếm lớn hơn trong thời gian ngắn hơn, từ đó đặt ra một câu hỏi: nếu lời giải có thể được tìm thấy nhanh hơn nhiều, giá trị của nghiên cứu có dần tập trung vào kết quả cuối cùng hơn là quá trình đi đến nó?</p>
+<p class="body-copy">Có thể hình dung nghiên cứu khoa học như một hành trình leo núi. Đỉnh núi là mục tiêu, nhưng trên đường đi, người leo phải tìm đường, thử nhiều lối khác nhau và đôi khi phát hiện những điều ngoài dự tính. Nghiên cứu cũng vậy, trong quá trình giải một bài toán, các nhà khoa học có thể tạo ra những khái niệm, kỹ thuật, định lý trung gian hoặc công cụ mới. Một số trong đó sau này trở thành nền tảng cho những câu hỏi và hướng nghiên cứu khác.</p>
+<p class="body-copy">AI làm thay đổi hành trình này. Khi một hệ thống có thể đưa chúng ta đến lời giải nhanh hơn, quá trình tìm kiếm cũng bị rút ngắn hoặc tái cấu trúc. Điều đó đặt ra câu hỏi về số phận của những khám phá vốn xuất hiện trên đường đi: chúng sẽ ít xuất hiện hơn, hay chỉ xuất hiện dưới những hình thức khác?</p>
+<p class="body-copy">Điều đáng quan tâm, vì thế, là những tri thức và công cụ được tạo ra bên cạnh lời giải cuối cùng sẽ thay đổi ra sao khi AI làm biến đổi quá trình nghiên cứu khoa học.</p>
+    </div>
+  </section>
+
+  <aside class="question-band" aria-label="Câu hỏi trung tâm">
+    <p>Nếu con đường đến lời giải ngày càng ngắn, điều gì sẽ xảy ra với những khám phá từng xuất hiện trên đường đi?</p>
+  </aside>
+
+  <section class="section" id="history">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">01 / BỐI CẢNH</div><h2>Công nghệ đã nhiều lần thay đổi cách toán học tạo ra và kiểm tra tri thức</h2></div>
+      <div class="reading"><p class="body-copy">AI không phải là lần đầu tiên toán học phải đối diện với câu hỏi liệu máy móc có thể đảm nhiệm những công việc trí tuệ vốn do con người thực hiện.</p>
+<p class="body-copy">Một trường hợp nổi tiếng là Định lý bốn màu. Bài toán được đặt ra từ năm 1852 và đến năm 1976, Kenneth Appel và Wolfgang Haken công bố một chứng minh dựa một phần vào máy tính để kiểm tra số lượng lớn cấu hình. Điều này gây tranh luận vì không một nhà toán học nào có thể trực tiếp kiểm tra toàn bộ các phép tính bằng tay. Từ đó xuất hiện câu hỏi về bản chất của chứng minh: một kết quả phụ thuộc vào việc kiểm tra bằng máy tính có còn là chứng minh theo nghĩa truyền thống hay không? (Appel &amp; Haken, 1977; Gonthier, 2008).</p>
+<p class="body-copy">Vấn đề tương tự xuất hiện với giả thuyết Kepler. Năm 1998, Thomas Hales công bố một chứng minh kết hợp lập luận toán học với lượng lớn tính toán bằng máy tính. Khó khăn trong việc kiểm tra toàn bộ chứng minh bằng phương pháp phản biện truyền thống đã thúc đẩy dự án Flyspeck, nhằm hình thức hóa chứng minh bằng proof assistant. Kết quả là một chứng minh hình thức sử dụng HOL Light và Isabelle, được công bố năm 2017 (Hales et al., 2017). Trường hợp này cho thấy việc tạo ra một chứng minh và việc cộng đồng có thể kiểm tra, hiểu và tích hợp nó vào tri thức chung không phải lúc nào cũng diễn ra đồng thời.</p>
+<p class="body-copy">Giả thuyết Riemann cho thấy một giới hạn khác của tính toán. Clay Mathematics Institute cho biết 10 nghìn tỷ nghiệm không tầm thường đầu tiên của hàm zeta đã được kiểm tra và đều phù hợp với giả thuyết. Tuy nhiên, dù số trường hợp được xác nhận lớn đến đâu, việc kiểm tra hữu hạn vẫn không thể thay thế một chứng minh tổng quát.</p>
+<p class="body-copy">Những ví dụ này cho thấy một phân biệt đã tồn tại trước AI và có thể trở nên quan trọng hơn khi AI tham gia sâu vào nghiên cứu: xác nhận một kết quả bằng tính toán và hiểu vì sao kết quả đó đúng là hai yêu cầu khác nhau.</p></div>
+    </div>
+  </section>
+
+  <aside class="pull"><p>Xác nhận một kết quả bằng tính toán và hiểu vì sao kết quả đó đúng là hai yêu cầu khác nhau.</p></aside>
+
+  <section class="section" id="more-than-answer">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">02 / GIÁ TRỊ</div><h2>Một bài toán không chỉ sản sinh ra đáp án</h2></div>
+    </div>
+    <div class="cards-3" aria-label="Ba ví dụ lịch sử">
+      <article class="card"><div class="kicker">Case 01</div><h3>Fermat</h3><p>Một bài toán kéo theo “ideal numbers”, rồi nối tới đại số giao hoán, lý thuyết số đại số, đường cong elliptic, dạng modular và biểu diễn Galois.</p></article>
+      <article class="card"><div class="kicker">Case 02</div><h3>Entscheidungsproblem</h3><p>Một câu trả lời phủ định góp phần hình thức hóa khái niệm tính toán được và đặt nền móng cho computability cùng khoa học máy tính lý thuyết.</p></article>
+      <article class="card"><div class="kicker">Case 03</div><h3>Poincaré</h3><p>Ricci flow và chương trình Hamilton–Perelman không chỉ giải bài toán Poincaré mà còn đóng góp vào Geometrization Conjecture rộng hơn.</p></article>
+    </div>
+    <div class="reading"><p class="body-copy">Các ví dụ trên chủ yếu nói về việc máy móc đảm nhiệm khối lượng lớn công việc kiểm tra. Nhưng lịch sử toán học còn cho thấy quá trình giải một bài toán có thể tạo ra những tri thức vượt xa chính bài toán đó. Những khái niệm và phương pháp được phát triển trong quá trình tìm lời giải đôi khi trở thành công cụ cho các lĩnh vực khác.</p>
+<p class="body-copy">Định lý cuối cùng của Fermat là một ví dụ. Trong thế kỷ XIX, những khó khăn khi tìm cách chứng minh định lý đã dẫn Ernst Kummer đến khái niệm "ideal numbers", sau này góp phần vào sự phát triển của ideal, đại số giao hoán và lý thuyết số đại số. Đến cuối thế kỷ XX, lời giải của Andrew Wiles lại gắn bài toán Fermat với đường cong elliptic, dạng modular và biểu diễn Galois. Giá trị toán học của câu chuyện Fermat vì thế lớn hơn rất nhiều mệnh đề cuối cùng rằng phương trình <span class="formula">x<sup>n</sup> + y<sup>n</sup> = z<sup>n</sup></span> không có nghiệm nguyên dương khi <span class="formula">n &gt; 2</span>.</p>
+<p class="body-copy">Một câu trả lời phủ định cũng có thể tạo ra tri thức mới. Entscheidungsproblem của Hilbert và Ackermann hỏi liệu có tồn tại một quy trình tổng quát để quyết định tính đúng đắn của các công thức trong logic bậc nhất hay không. Church và Turing cho thấy một thuật toán như vậy không tồn tại. Đồng thời, công trình của họ góp phần hình thức hóa khái niệm tính toán được và đặt nền móng cho lý thuyết computability và khoa học máy tính lý thuyết.</p>
+<p class="body-copy">Giả thuyết Poincaré cho thấy một trường hợp khác. Lời giải của Grigori Perelman dựa trên Ricci flow do Richard Hamilton phát triển và mở rộng một chương trình kết nối phương trình đạo hàm riêng, hình học vi phân và topology. Các phương pháp Hamilton–Perelman còn góp phần giải quyết Geometrization Conjecture của Thurston, một kết quả rộng hơn bài toán Poincaré ban đầu.</p>
+<p class="body-copy">Một bài toán vì thế có thể tạo ra hai loại kết quả: lời giải cho câu hỏi ban đầu và những tri thức có thể tái sử dụng, như khái niệm, công cụ, phương pháp hoặc câu hỏi mới. Tuy nhiên, điều này không có nghĩa một quá trình nghiên cứu càng dài thì càng có giá trị. Nhiều năm thử nghiệm có thể không tạo ra gì đáng kể, trong khi một lời giải nhanh vẫn có thể mở ra hướng nghiên cứu mới. Điều quan trọng là quá trình đó tạo ra được bao nhiêu tri thức có thể tiếp tục sử dụng ngoài bài toán ban đầu.</p>
+<p class="body-copy">AI làm câu hỏi này trở nên khó hơn. Nếu thời gian tìm lời giải được rút ngắn mạnh, những tri thức từng hình thành trong quá trình tìm kiếm sẽ giảm đi, hay chúng sẽ được tạo ra theo một cách khác?</p></div>
+  </section>
+
+  <aside class="pull"><p>Điều quan trọng không phải quá trình dài hay ngắn, mà là nó tạo ra bao nhiêu tri thức có thể tiếp tục sử dụng ngoài bài toán ban đầu.</p></aside>
+
+  <section class="section" id="ai-levels">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">03 / TỰ CHỦ</div><h2>AI mới ở điểm nào?</h2></div>
+    </div>
+    <div class="stack" aria-label="Ba tầng tự chủ của AI trong nghiên cứu">
+      <div class="stack-row"><div class="stack-num">01</div><div><h3>Tự động hóa tính toán và kiểm tra</h3><p>Con người chọn phương pháp; máy thực hiện phần lớn công việc cơ học.</p></div></div>
+      <div class="stack-row"><div class="stack-num">02</div><div><h3>Tự chủ trong tìm kiếm lời giải</h3><p>Con người xác định bài toán và tiêu chuẩn thành công; AI tự khảo sát hướng tiếp cận, tạo giả thuyết trung gian và lập luận.</p></div></div>
+      <div class="stack-row"><div class="stack-num">03</div><div><h3>Tự chủ trong xác định nghị trình nghiên cứu</h3><p>Hệ thống tự lựa chọn câu hỏi, khái niệm, kết quả đáng quan tâm và hướng phát triển của lĩnh vực.</p></div></div>
+    </div>
+    <div class="reading"><p class="body-copy">Đặt AI trong lịch sử của computer-assisted proof giúp thấy được tính liên tục của quá trình tự động hóa trong toán học. Tuy nhiên, AI có thể tham gia sâu hơn vào hoạt động nghiên cứu so với các hệ thống tính toán trước đây.</p>
+<p class="body-copy">Trong Định lý bốn màu hay chứng minh ban đầu của giả thuyết Kepler, con người chủ yếu xác định chiến lược chứng minh, còn máy tính đảm nhiệm những phần kiểm tra hoặc tính toán quá lớn để thực hiện thủ công. Các hệ AI tiên tiến có thể tham gia trực tiếp vào quá trình tìm kiếm lời giải: đề xuất hướng tiếp cận, thử nhiều chiến lược, tạo lemma trung gian, xây dựng các bước chứng minh và sử dụng những kết quả vừa tìm được cho các bước tiếp theo.</p>
+<p class="body-copy">Mức độ tham gia này có thể chia thành ba tầng.</p>
+<p class="body-copy">Tầng thứ nhất là tự động hóa tính toán và kiểm tra. Con người chọn phương pháp, còn máy thực hiện phần lớn công việc cơ học. Đây là mô hình quen thuộc của computer-assisted proof.</p>
+<p class="body-copy">Tầng thứ hai là tự chủ trong tìm kiếm lời giải. Con người xác định bài toán và tiêu chuẩn thành công, còn hệ AI tự khảo sát các hướng tiếp cận, tạo giả thuyết trung gian và xây dựng lập luận. Một số hệ thống multi-agent hiện nay bắt đầu hoạt động theo hướng này.</p>
+<p class="body-copy">Tầng thứ ba là tự chủ trong việc xác định nghị trình nghiên cứu. Hệ thống tự lựa chọn câu hỏi cần nghiên cứu, khái niệm cần phát triển, kết quả đáng quan tâm và hướng phát triển của một lĩnh vực.</p>
+<p class="body-copy">Ba tầng này cần được phân biệt. Năng lực tìm kiếm lời giải ở tầng thứ hai không đồng nghĩa với khả năng tự xác định mục tiêu nghiên cứu ở tầng thứ ba.</p>
+<p class="body-copy">Sự phân biệt đó trở nên đặc biệt rõ trong một trường hợp xuất hiện vào tháng 9 năm 2026 liên quan đến phương trình Euler và Navier–Stokes.</p></div>
+  </section>
+
+  <section class="center-claim" aria-label="Phân biệt quan trọng">
+    <div class="small">Phân biệt quan trọng</div>
+    <div class="big">Giỏi tìm lời giải không đồng nghĩa với giỏi lựa chọn câu hỏi đáng giải.</div>
+  </section>
+
+  <section class="data-stage" id="88-hours">
+    <div class="data-inner">
+      <div class="eyebrow" style="color:#d9b7b2">04 / THÍ NGHIỆM TỐC ĐỘ</div>
+      <h2 style="color:#f6efe6; max-width:900px; margin-bottom:46px">Euler, Navier–Stokes và một thí nghiệm về tốc độ nghiên cứu</h2>
+      <div class="data-title">88 GIỜ</div>
+      <div class="data-sub">Một con số đủ mạnh để tạo ấn tượng — và cũng đủ dễ bị hiểu sai nếu tách khỏi toàn bộ nguồn lực phía sau.</div>
+      <div class="stats" aria-label="Các mốc của thí nghiệm">
+        <div class="stat"><strong>≈100</strong><span>agent ở vòng Euler</span></div>
+        <div class="stat"><strong>≈10.000</strong><span>agent ở vòng Navier–Stokes</span></div>
+        <div class="stat"><strong>≈88h</strong><span>để đạt tới lời giải ứng viên theo mô tả nguồn</span></div>
+        <div class="stat"><strong>+17h</strong><span>formalize và kiểm tra bằng Lean</span></div>
+      </div>
+      <div class="reading"><p class="body-copy">Phương trình Euler và Navier–Stokes mô tả chuyển động của chất lưu và gắn với những câu hỏi toán học đã tồn tại qua nhiều thế hệ. Navier–Stokes Existence and Smoothness là một trong bảy Millennium Prize Problems do Clay Mathematics Institute công bố năm 2000. Một hướng giải quyết bài toán là chứng minh rằng trong ba chiều, nghiệm có thể phát triển kỳ dị trong thời gian hữu hạn dưới những điều kiện phù hợp.</p>
+<p class="body-copy">Trước khi có một lời giải hoàn chỉnh, nhiều thế hệ nhà toán học đã xây dựng lý thuyết xung quanh vấn đề này. Năm 1934, Jean Leray chứng minh sự tồn tại của một lớp nghiệm yếu. Sau đó, Luis Caffarelli, Robert Kohn và Louis Nirenberg phát triển kết quả nền tảng về tính chính quy từng phần của các nghiệm yếu thích hợp. Những công trình này không giải quyết Millennium Problem, nhưng tạo ra các công cụ tiếp tục được sử dụng trong nghiên cứu phương trình đạo hàm riêng.</p>
+<p class="body-copy">Ngày 8 tháng 9 năm 2026, OpenAI công bố một lời giải ứng viên theo hướng xây dựng sự hình thành kỳ dị trong thời gian hữu hạn, kèm theo một bản formalization bằng Lean. Tuy nhiên, chỉ vài ngày sau khi công bố, kết quả này chưa có đủ thời gian để trải qua đánh giá độc lập và đạt được sự chấp nhận rộng rãi của cộng đồng toán học. Theo quy định của Clay Mathematics Institute, một lời giải chỉ có thể được xem xét sau khi được xuất bản trong một &quot;Qualifying Outlet&quot;, ít nhất hai năm đã trôi qua và kết quả nhận được sự chấp nhận rộng rãi trong cộng đồng toán học quốc tế. Vì thế, trường hợp này hiện phù hợp hơn để xem như một thử nghiệm về khả năng AI tạo ra toán học ở biên nghiên cứu.</p>
+<p class="body-copy">Theo mô tả của OpenAI, quá trình bắt đầu với gần 100 agent làm việc khoảng 50 giờ trên một bài toán regularity của Euler không có ngoại lực. Kết quả Euler sau đó được cung cấp cho các agent như đầu vào cho vòng nghiên cứu Navier–Stokes. Nhóm Navier–Stokes gồm khoảng 10.000 agent hoạt động đồng thời. Các nhóm nhận những formulation khác nhau của bài toán, còn những insight được đánh giá là hữu ích được tổng hợp và phân phối lại cho các nhóm khác. OpenAI cho biết hệ thống đạt tới lời giải ứng viên sau khoảng 88 giờ và cần thêm khoảng 17 giờ để formalize và kiểm tra bằng Lean với GPT-6 Astra.</p>
+<p class="body-copy">Điểm đáng chú ý là tốc độ tái sử dụng tri thức. Một kết quả Euler vừa được tìm thấy có thể lập tức trở thành đầu vào cho vòng nghiên cứu Navier–Stokes tiếp theo. Trong nghiên cứu truyền thống, một kết quả mới thường phải qua nhiều bước trước khi được cộng đồng hấp thụ và sử dụng rộng rãi. Trong hệ multi-agent này, quá trình từ tìm ra một kết quả đến sử dụng nó cho bài toán tiếp theo diễn ra ngay trong cùng hệ thống.</p>
+<p class="body-copy">AI vì thế có thể rút ngắn cả thời gian tìm lời giải lẫn khoảng thời gian giữa việc tạo ra và tái sử dụng tri thức trung gian.</p>
+<p class="body-copy">Tuy nhiên, theo chính mô tả này, hệ thống vẫn chưa tự chủ hoàn toàn trong việc xác định nghị trình nghiên cứu. Con người lựa chọn bài toán, cung cấp các formulation, tổ chức các nhóm agent, phân bổ thêm tài nguyên sau kết quả Euler và quyết định kết quả nào cần formalize và công bố. Hệ thống có mức tự chủ cao trong tìm kiếm lời giải, còn mục tiêu và cấu trúc nghiên cứu vẫn do con người định hình.</p></div>
+    </div>
+  </section>
+
+  <section class="counter-stage" id="what-88-means">
+    <div class="counter-inner">
+      <div class="counter-title"><div class="red">88h</div><h2>“88 giờ” thực sự đo điều gì?</h2></div>
+      <div class="counter-copy">
+        <div class="stats-light" aria-label="Quy mô tính toán được nêu trong bản thảo">
+          <div class="stat-light"><strong>2,7 triệu</strong><span>message</span></div>
+          <div class="stat-light"><strong>130 tỷ</strong><span>output token</span></div>
+          <div class="stat-light"><strong>10.000</strong><span>agent đồng thời</span></div>
+        </div>
+        <p class="body-copy">Con số 88 giờ dễ tạo ấn tượng rằng một bài toán tồn tại gần một thế kỷ đã được AI giải trong chưa đầy bốn ngày. Nhưng 88 giờ ở đây chỉ là thời gian lịch của một giai đoạn tìm kiếm, không phải toàn bộ thời gian hay nguồn lực cần để tạo ra kết quả.</p>
+<p class="body-copy">AI không bắt đầu từ con số không. Hệ thống dựa trên một nền tảng toán học được xây dựng qua nhiều thế hệ, từ lý thuyết nghiệm yếu, harmonic analysis và PDE đến các kỹ thuật regularity và nhiều kết quả trung gian. Trong chính thí nghiệm của OpenAI, kết quả Euler vừa được tìm thấy cũng trở thành đầu vào cho quá trình nghiên cứu Navier–Stokes.</p>
+<p class="body-copy">Theo OpenAI, riêng quá trình Navier–Stokes tạo ra khoảng 2,7 triệu message và 130 tỷ output token, với khoảng 10.000 agent hoạt động đồng thời. Con số 88 giờ cũng không bao gồm chi phí huấn luyện model nền, hạ tầng tính toán và lao động con người dùng để xây dựng và định hướng hệ thống.</p>
+<p class="body-copy">Vì vậy, khi đánh giá tốc độ nghiên cứu của AI, cần phân biệt ít nhất thời gian lịch, lượng tính toán, hạ tầng, tri thức tiền nhiệm và lao động con người. Một hệ thống có thể giảm mạnh time-to-result mà không đồng nghĩa với việc tổng nguồn lực cần để tạo ra kết quả giảm theo cùng tỷ lệ.</p>
+<p class="body-copy">Sự phân biệt này đặc biệt quan trọng khi so sánh năng suất khoa học giữa con người và AI.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement" aria-label="Điểm nhớ về tốc độ nghiên cứu">
+    <div class="statement-inner"><p>Time-to-result giảm mạnh không có nghĩa tổng nguồn lực giảm theo cùng tỷ lệ.</p></div>
+  </section>
+
+  <section class="section" id="trust">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">05 / NIỀM TIN</div><h2>Từ việc kiểm tra chứng minh đến kiến trúc của niềm tin</h2></div>
+      <div class="reading"><p class="body-copy">Nếu AI có thể tạo ra những chứng minh ngày càng lớn, câu hỏi tiếp theo là làm thế nào con người biết chúng đúng.</p>
+<p class="body-copy">Với những chứng minh có hàng triệu bước hình thức hoặc lượng tính toán quá lớn, một người không thể kiểm tra toàn bộ bằng tay. Proof assistant như Lean, Coq, Isabelle hay HOL Light đưa ra một mô hình khác: chứng minh được biểu diễn dưới dạng hình thức để một bộ kiểm tra tương đối nhỏ xác nhận theo các quy tắc logic định trước. Trong Lean, các tactic, elaborator, công cụ tìm kiếm chứng minh và AI có thể rất phức tạp, nhưng đầu ra cuối cùng vẫn phải được kernel chấp nhận.</p>
+<p class="body-copy">Điều này chuyển phần lớn gánh nặng kiểm chứng từ quá trình suy luận của AI sang một trusted computing base nhỏ hơn. Tuy nhiên, kernel vẫn là phần mềm. Ngoài việc proof được chấp nhận, người kiểm tra còn phải xem xét các tiên đề, thư viện được import, môi trường build, theorem statement và trong những trường hợp rủi ro cao, các checker độc lập.</p>
+<p class="body-copy">Tháng 7 năm 2026, Lean 4.32.2 đã vá một soundness bug trong kernel có thể khiến hệ thống chấp nhận một định lý sai trong một số điều kiện. Một external checker độc lập không mắc cùng lỗi đó. Sự kiện này không cho thấy lời giải Navier–Stokes của OpenAI bị ảnh hưởng, nhưng minh họa rằng formal verification không loại bỏ hoàn toàn niềm tin. Nó chuyển niềm tin sang một tập hợp thành phần nhỏ hơn và dễ kiểm toán hơn.</p></div>
+    </div>
+  </section>
+
+  <aside class="pull"><p>Formal verification không loại bỏ hoàn toàn niềm tin. Nó chuyển niềm tin sang một tập hợp thành phần nhỏ hơn và dễ kiểm toán hơn.</p></aside>
+
+  <section class="center-claim" aria-label="Một proof đúng có thể chứng minh nhầm bài toán">
+    <div class="small">Specification problem</div>
+    <div class="big">Một proof đúng có thể chứng minh nhầm bài toán.</div>
+  </section>
+
+  <section class="section" id="specification">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">06 / ĐÚNG CÁI GÌ?</div><h2>Một proof đúng có thể chứng minh nhầm bài toán</h2></div>
+      <div class="reading"><p class="body-copy">Kernel có thể xác nhận một proof hợp lệ, nhưng không tự quyết định theorem statement có thực sự tương ứng với bài toán mà con người muốn giải hay không. Đây là specification problem.</p>
+<p class="body-copy">Với Navier–Stokes, formalization phải xác định chính xác miền không gian, điều kiện biên hoặc suy giảm ở vô hạn, mức độ smoothness, ngoại lực, notion of solution và các giả thiết liên quan. Một giả thiết mạnh hơn hoặc một formulation không tương đương với bài toán gốc có thể tạo ra một proof hoàn toàn hợp lệ trong Lean nhưng vẫn không giải quyết Millennium Problem.</p>
+<p class="body-copy">Vì vậy cần phân biệt formal correctness, tức kết luận thực sự suy ra từ những giả thiết đã formalize, với semantic fidelity, tức các định nghĩa và giả thiết đó thực sự tương ứng với bài toán khoa học ban đầu. Proof assistant xử lý rất tốt vấn đề thứ nhất. Vấn đề thứ hai vẫn cần chuyên môn toán học và kiểm toán specification.</p></div>
+    </div>
+  </section>
+
+  <div class="triad" aria-label="Ba tầng cần phân biệt khi đánh giá một kết quả">
+    <article class="triad-item"><div class="n">01</div><h3>Correctness</h3><p>Kết luận có thực sự suy ra từ các giả thiết đã được formalize hay không?</p></article>
+    <article class="triad-item"><div class="n">02</div><h3>Semantic fidelity</h3><p>Định nghĩa và giả thiết được formalize có thực sự tương ứng với bài toán khoa học ban đầu hay không?</p></article>
+    <article class="triad-item"><div class="n">03</div><h3>Provenance</h3><p>Ý tưởng đến từ đâu, nguồn nào ảnh hưởng, ai nên nhận credit và lịch sử hình thành có thể được kiểm toán tới mức nào?</p></article>
+  </div>
+
+  <section class="section" id="understanding">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">07 / HIỂU</div><h2>Formal verification có làm chúng ta hiểu ít đi?</h2></div>
+      <div class="reading"><p class="body-copy">Một proof term gồm hàng triệu bước có thể vượt quá khả năng đọc của một cá nhân. Quá trình tìm kiếm của AI cũng có thể quá lớn để chuyển trực tiếp thành một lời giải thích trực giác.</p>
+<p class="body-copy">Tuy nhiên, formalization có thể làm rõ những mặt khác của chứng minh. Các giả thiết phải được phát biểu chính xác, những bước từng được bỏ qua phải trở thành lemma rõ ràng, còn quan hệ phụ thuộc giữa các kết quả có thể được truy vết.</p>
+<p class="body-copy">Vì thế, vấn đề không thể giản lược thành “formal certainty tăng thì understanding giảm”. Một nhà toán học có thể không theo dõi từng bước máy thực hiện nhưng vẫn hiểu cấu trúc của chứng minh: lemma nào quan trọng, assumptions nào cần thiết và kỹ thuật nào có thể chuyển sang bài toán khác. Khi AI ngày càng giỏi tìm proof, proof compression và mathematical explanation có thể trở thành một phần quan trọng hơn của công việc nghiên cứu.</p>
+<p class="body-copy">Quá trình nghiên cứu khi đó có thể được chia thành ba tầng: tìm kiếm ở quy mô lớn, verification hình thức và việc nén kết quả thành những khái niệm, lập luận và explanation mà con người có thể sử dụng.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="provenance">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">08 / NGUỒN GỐC</div><h2>Từ correctness đến provenance</h2></div>
+      <div class="reading"><p class="body-copy">Độ đúng của theorem chưa phải toàn bộ vấn đề. Một kết quả còn có provenance: ý tưởng đến từ đâu, những nguồn nào ảnh hưởng đến quá trình khám phá, ai nên nhận credit và người khác có thể tái dựng lịch sử của kết quả đến mức nào.</p>
+<p class="body-copy">Trường hợp Navier–Stokes năm 2026 cho thấy vấn đề này có thể xuất hiện rất sớm. OpenAI cho biết họ bắt đầu nỗ lực sau khi nghe tin đồn về hai Millennium Prize Problems và sau đó nhận ra tin đồn liên quan đến công việc của Levent Alpöge và Tristan Buckmaster về Euler. Công ty nói hệ thống và các nhà nghiên cứu không được xem công trình cụ thể trước khi nó được công khai, đồng thời không loại trừ hoàn toàn khả năng dữ liệu đã được khử định danh từ việc sử dụng sản phẩm trước đây từng góp phần vào quá trình cải thiện model. Những vấn đề về liên hệ giữa các công trình và attribution vẫn đang được tranh luận, nên chưa thể rút ra kết luận về quyền ưu tiên khoa học.</p>
+<p class="body-copy">Ở quy mô hàng triệu message và hàng trăm tỷ token, việc xác định một ý tưởng xuất hiện từ đâu có thể trở thành một bài toán kỹ thuật riêng. Một hệ thống nghiên cứu dựa nhiều vào AI vì thế có thể cần provenance infrastructure để ghi lại nguồn được truy cập, lineage của lemma và insight, thời điểm ý tưởng xuất hiện và những quyết định quan trọng của con người. Nếu thiếu lớp này, một theorem có thể đúng về mặt logic nhưng lịch sử hình thành của nó lại rất khó kiểm toán.</p></div>
+    </div>
+  </section>
+
+  <section class="conclusion" id="conclusion">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-no">09 / KẾT LUẬN</div><h2>AI đang thay đổi điều gì trong hoạt động nghiên cứu?</h2></div>
+      <div class="reading"><p class="body-copy">Từ Định lý bốn màu, giả thuyết Kepler và Riemann đến Fermat, Entscheidungsproblem, Poincaré và Euler–Navier–Stokes, công nghệ đã nhiều lần thay đổi cách toán học tạo ra tri thức. Máy tính đảm nhiệm lượng lớn tính toán và kiểm tra. Proof assistant giúp kiểm chứng những chuỗi lập luận dài. AI tiến thêm một bước khi tham gia trực tiếp vào việc tìm hướng giải, xây dựng lemma và sử dụng kết quả mới cho các vòng nghiên cứu tiếp theo.</p>
+<p class="body-copy">Điều này làm rõ rằng nghiên cứu gồm nhiều chức năng khác nhau: lựa chọn câu hỏi, tạo khái niệm, tìm lời giải, kiểm chứng, xác nhận specification, giải thích kết quả, rút ra phương pháp có thể tái sử dụng và ghi nhận provenance. Trước đây, phần lớn các chức năng này cùng nằm trong cộng đồng các nhà nghiên cứu. AI có thể phân phối lại chúng giữa con người, model, multi-agent system và proof assistant.</p>
+<p class="body-copy">Khi việc tìm lời giải trở nên nhanh và rẻ hơn, một số phần khác của nghiên cứu có thể trở nên quan trọng hơn. Proof được tạo nhanh làm tăng nhu cầu kiểm tra theorem statement. Không gian tìm kiếm lớn làm tăng giá trị của mathematical explanation. Khả năng tái sử dụng kết quả gần như tức thời làm provenance và việc nhận diện các khái niệm có tính khái quát trở nên quan trọng hơn.</p>
+<p class="body-copy">Vì vậy, đánh giá AI trong khoa học bằng số lượng bài toán được giải là chưa đủ. Một tiêu chí khó hơn là liệu các lời giải đó có tạo ra những khái niệm và phương pháp mà người khác có thể hiểu, tái sử dụng và áp dụng cho những vấn đề mới hay không.</p>
+<p class="body-copy">Nếu AI làm được điều đó, quá trình nghiên cứu sẽ thay đổi hình thức. Nếu AI chủ yếu tạo ra những proof đúng nhưng khó diễn giải và ít tạo ra tri thức có thể tái sử dụng, số lượng kết quả có thể tăng nhanh trong khi khoảng cách giữa biết một điều đúng và hiểu ý nghĩa của nó ngày càng lớn. Thách thức khi đó là biến dòng kết quả được tạo ra với tốc độ máy thành tri thức mà cộng đồng có thể kiểm tra, hiểu và tiếp tục sử dụng.</p></div>
+    </div>
+  </section>
+
+  <section class="closing" aria-label="Thông điệp kết">
+    <div class="closing-inner">
+      <div class="label">Điểm nhớ cuối cùng</div>
+      <h2>Điểm nghẽn mới có thể không còn là tìm ra đáp án, mà là biến đáp án thành tri thức.</h2>
+    </div>
+  </section>
+
+  <section class="references" aria-label="Tài liệu tham khảo">
+    <details>
+      <summary>Tài liệu tham khảo</summary>
+      <ol>
+        <li>Appel, K., &amp; Haken, W. (1977). Every planar map is four colorable. Part I: Discharging. Illinois Journal of Mathematics, 21(3), 429–490.</li><li>Church, A. (1936). An unsolvable problem of elementary number theory. American Journal of Mathematics, 58(2), 345–363.</li><li>Clay Mathematics Institute. (2018). Rules for the Millennium Prize Problems.</li><li>Clay Mathematics Institute. Riemann Hypothesis. Millennium Prize Problems.</li><li>Fefferman, C. L. (2006). Existence and smoothness of the Navier–Stokes equation. In J. Carlson, A. Jaffe, &amp; A. Wiles (Eds.), The Millennium Prize Problems. American Mathematical Society.</li><li>Gonthier, G. (2008). Formal Proof—The Four-Color Theorem. Notices of the American Mathematical Society, 55(11), 1382–1393.</li><li>Hales, T. C., Adams, M., Bauer, G., et al. (2017). A formal proof of the Kepler conjecture. Forum of Mathematics, Pi, 5, e2. DOI: 10.1017/fmp.2017.1.</li><li>Lean FRO. (2026). Validating a Lean Proof. Lean Reference Manual.</li><li>Morgan, J., &amp; Tian, G. (2007). Ricci Flow and the Poincaré Conjecture. Clay Mathematics Monographs, Vol. 3. American Mathematical Society and Clay Mathematics Institute.</li><li>OpenAI. (2026, September 8). On the Navier–Stokes Millennium Prize Problem.</li><li>Taylor, R., &amp; Wiles, A. (1995). Ring-theoretic properties of certain Hecke algebras. Annals of Mathematics, 141(3), 553–572.</li><li>Turing, A. M. (1936/1937). On computable numbers, with an application to the Entscheidungsproblem. Proceedings of the London Mathematical Society, 42, 230–265.</li><li>Wiles, A. (1995). Modular elliptic curves and Fermat’s Last Theorem. Annals of Mathematics, 141(3), 443–551.</li>
+      </ol>
+    </details>
+  </section>
+</main>
+
+<footer class="footer"><div class="footer-inner"><span>AI, chứng minh và giá trị của quá trình khoa học</span><span>Editorial longform · HTML tự chứa</span></div></footer>
+
+<script>
+(function(){
+  const bar = document.getElementById('progressBar');
+  function update(){
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = p + '%';
+  }
+  document.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>
